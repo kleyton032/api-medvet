@@ -1,6 +1,7 @@
 const express = require('express')
 
 const Pet = require('../models/pet')
+const Tutor = require('../models/tutor')
 
 const router = express.Router();
 
@@ -8,6 +9,7 @@ router.post('/cadastrar', async(req, res)=>{
     try {
         const pet = await Pet.create(req.body);
         res.send({pet})
+       await Tutor.findOneAndUpdate({pet: pet.id})
     } catch (error) {
         res.status(400).send({ error: 'Erro no cadastro de Pets' });
         console.log(err)
