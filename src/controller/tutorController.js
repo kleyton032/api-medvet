@@ -1,6 +1,7 @@
 const express = require('express')
 
 const Tutor = require('../models/tutor')
+const Pet = require('../models/pet')
 
 const router = express.Router();
 
@@ -14,11 +15,16 @@ router.post('/registrar', async(req, res)=>{
     }
 });
 
-router.get('/tutores', async (req, res)=>{
+router.get('/tutores/:tutor_id', async (req, res)=>{
     try {
-       // Fazendo uma consulta no banco de dados
-        const tutores = await Tutor.find().populate('pet')
-        res.send({tutores})
+       //Fazendo uma consulta no banco de dados
+        const tutor = await Tutor.findById(req.params.tutor_id)
+         //Realizando consulta na tabela pets e retornando o tutor vinculado a ela.
+        const pets = await Pet.find({tutor:req.params.tutor_id})
+        res.json({
+            tutor, 
+            pets
+        })
     } catch (error) {
         res.send('Erro ao tentar Selecionar Todos os usuários...: ' + error);
         console.log(error)

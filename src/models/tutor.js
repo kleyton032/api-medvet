@@ -28,10 +28,6 @@ const TutorSchema = new mongoose.Schema({
         lowercase: true
 
     },
-    pet:[{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Pet'
-    }],
     createAt: {
         type: Date,
         default: Date.now

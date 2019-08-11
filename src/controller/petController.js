@@ -9,7 +9,7 @@ router.post('/cadastrar', async(req, res)=>{
     try {
         const pet = await Pet.create(req.body);
         res.send({pet})
-       await Tutor.findOneAndUpdate({pet: pet.id})
+       //await Tutor.create({pet: pet.id})
     } catch (error) {
         res.status(400).send({ error: 'Erro no cadastro de Pets' });
         console.log(err)
@@ -18,7 +18,7 @@ router.post('/cadastrar', async(req, res)=>{
 
 router.get('/pets', async(req, res)=>{
     try {
-       const pets = await Pet.find().populate('tutor')
+       const pets = await Pet.find().populate('tutor', 'nome')
         res.json(pets)
     }catch (error) {
         res.send('Erro ao tentar Selecionar Todos os pets...: ' + error);
