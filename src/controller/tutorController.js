@@ -1,7 +1,7 @@
 const express = require('express')
 
-const Tutor = require('../models/tutor')
-const Pet = require('../models/pet')
+const Tutor = require('../models/Tutor')
+const Pet = require('../models/Pet')
 
 const router = express.Router();
 
