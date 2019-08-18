@@ -14,9 +14,34 @@ const TutorSchema = new mongoose.Schema({
         type: String,
         required: true
     }],
-    logradouro: [{
-        type: String,
-        required: true
+    endereco: [{
+        logradouro:{
+            type:String,
+            required: true
+        },
+        numero:{
+            type: String,
+            required: true
+        },
+        complemento:{
+            type:String,
+        },
+        bairro:{
+            type:String,
+            required: true
+        },
+        cidade:{
+            type:String,
+            required: true
+        },
+        estado:{
+            type:String,
+            required: true
+        },
+        cep:{
+            type:String,
+            required: true
+        }
     }],
     dataNascimento:{
         type:String,

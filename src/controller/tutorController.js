@@ -11,7 +11,7 @@ router.post('/registrar', async(req, res)=>{
         res.send({tutor})
     } catch (error) {
         res.status(400).send({ error: 'Erro no cadastro de Tutor' });
-        console.log(err)
+        console.log(error)
     }
 });
 

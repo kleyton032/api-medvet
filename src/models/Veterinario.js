@@ -18,37 +18,39 @@ const VeterinarioSchema = new mongoose.Schema({
         type: Number,
         required:true
     },
-    telefone:{
+    telefone:[{
         type: Number,
         required:true
-    },
-    logradouro:{
-        type: String,
-        required: true
-    },
-    numero:{
-        type:String,
-        required: true,
-    },
-    complemento:{
-        type:String
-    },
-    bairro:{
-        type: String,
-        required:true
-    },
-    cep:{
-        type: String,
-        required:true
-    },
-    cidade:{
-        type: String,
-        required: true
-    },
-    estado:{
-        type: String,
-        required: true
-    },
+    }],
+    endereco: [{
+        logradouro:{
+            type:String,
+            required: true
+        },
+        numero:{
+            type: String,
+            required: true
+        },
+        complemento:{
+            type:String,
+        },
+        bairro:{
+            type:String,
+            required: true
+        },
+        cidade:{
+            type:String,
+            required: true
+        },
+        estado:{
+            type:String,
+            required: true
+        },
+        cep:{
+            type:String,
+            required: true
+        }
+    }],
     createAt: {
         type: Date,
         default: Date.now
