@@ -12,7 +12,7 @@ router.post('/cadastrar', async(req, res)=>{
        //await Tutor.create({pet: pet.id})
     } catch (error) {
         res.status(400).send({ error: 'Erro no cadastro de Pets' });
-        console.log(err)
+        console.log(error)
     }
 });
 
