@@ -1,20 +1,33 @@
-const express = require('express')
+const mongoose = require('mongoose')
+const Tutor = mongoose.model('Tutor')
 
-const Tutor = require('../models/Tutor')
-const Pet = require('../models/Pet')
+class TutorController {
+    registrar(req, res, next) {
+        const tutor = req.body;
 
-const router = express.Router();
+        /** 
+        tutor.array.forEach(element => {
+            if (element === undefined || element === null || element === "") {
+                res.status(422).json({
+                    error: "Preencha todos os campos para o cadastro."
+                })
+            }
+        });
+        */
+       console.log(tutor)
 
-router.post('/registrar', async(req, res)=>{
-    try {
-        const tutor = await Tutor.create(req.body);
-        res.send({tutor})
-    } catch (error) {
-        res.status(400).send({ error: 'Erro no cadastro de Tutor' });
-        console.log(error)
+        const tutorDao = new Tutor(tutor)
+
+        tutorDao.save().then((tutorDao) => {
+            res.json({ tutorDao })
+        }).catch((err) => {
+            console.log(err)
+            next(err)
+        })
     }
-});
+}
 
+/*
 router.get('/tutores/:tutor_id', async (req, res)=>{
     try {
        //Fazendo uma consulta no banco de dados
@@ -31,4 +44,6 @@ router.get('/tutores/:tutor_id', async (req, res)=>{
     }
  }); 
 
-module.exports = router;
+ */
+
+module.exports = TutorController;

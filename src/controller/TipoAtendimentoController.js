@@ -19,4 +19,17 @@ router.post('/registrarTipoAtendimento', async(req, res)=>{
 
 })
 
+router.get('/listTipo', async(req, res)=>{
+
+    try {
+        const tipo = await TipoAtendimento.find()
+        res.send({tipo})
+    } catch (error) {
+        res.status(400).send({ error: 'Erro ao registrar Tipo do Atendimento' });
+        console.log(error)   
+    }
+    
+
+})
+
 module.exports = router

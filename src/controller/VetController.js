@@ -18,4 +18,13 @@ router.post('/cadastrar', async(req, res)=>{
     }
 });
 
+router.get('/listVet', async(req, res) =>{
+    const vet = await Vet.find();
+    res.send({vet})
+})
+
+//alterar vet
+//inativar vet
+//listar vets
+//listar vet por id
 module.exports = router

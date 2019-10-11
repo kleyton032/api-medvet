@@ -1,4 +1,6 @@
-const mongoose = require('../config/database');
+
+const mongoose = require('mongoose');
+Schema = mongoose.Schema;
 
 const TutorSchema = new mongoose.Schema({
     nome:{
@@ -10,10 +12,9 @@ const TutorSchema = new mongoose.Schema({
         unique:true,
         required:true
     },
-    telefones: [{
-        type: String,
-        required: true
-    }],
+    telefones: {
+        type: [{type:String}]
+    },
     endereco: [{
         logradouro:{
             type:String,
@@ -44,20 +45,14 @@ const TutorSchema = new mongoose.Schema({
         }
     }],
     dataNascimento:{
-        type:String,
-        required:true
+        type:String
     },
     email:{
         type: String,
         unique: true,
         lowercase: true
 
-    },
-    createAt: {
-        type: Date,
-        default: Date.now
     }
-});
+},{timestamps: true});
 
-const Tutor = mongoose.model('Tutor', TutorSchema)
-module.exports = Tutor
+module.exports = mongoose.model("Tutor", TutorSchema)

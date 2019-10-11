@@ -1,0 +1,4 @@
+{
+  "dbProduction":"mongodb://localhost:27017/api-medvet",
+  "dbTest":"mongodb://localhost:27017/api-medvet-test"
+}

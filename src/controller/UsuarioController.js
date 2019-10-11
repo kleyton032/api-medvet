@@ -28,4 +28,7 @@ router.get('/listUser/:user_id', async(req, res) => {
 //alterar usuário
 //listar todos usuários
 //inativar usuário
+//autenticar usuário
+//validar usuário
+//verificar permissões usuario
 module.exports = router
