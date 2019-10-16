@@ -1,46 +1,78 @@
-const mongoose = require('../config/database');
+const mongoose = require("mongoose");
+const uniqueValidator = require('mongoose-unique-validator');
+const crypto = require('crypto');
+const jwt = require('jsonwebtoken');
+const secret = require('../config').secret
 
-const Userchema = new mongoose.Schema({
-    email:{
+const UsuarioSchema = new mongoose.Schema({
+    nome: {
         type: String,
-        required: true
+        required: [true,"não pode ficar vazio."]
     },
-    senha:{
-        type: Number,
-        required: true,
-        select: false
-    },
-    acessos:[{
+    email: {
         type: String,
-        required: true
-    }],
-    funcionario:{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Funcionario',
-      
+        lowercase: true,
+        unique: true,
+        required: [true,"não pode ficar vazio."],
+        index: true,
+        match: [/\S+@\S+\.\S+/, 'é inválido.']
     },
-    veterinario:{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Vet',
-        
+    funcionario: {
+        type: Schema.Types.ObjectId,
+        ref: "Funcionario",
+        required: [true,"não pode ficar vazia."]
     },
-    ativo:{
-        type: Boolean,
-        required: true
+    permissao: {
+        type: Array,
+        default: ["atendente"]
     },
-    createAt: {
-        type: Date,
-        default: Date.now
-    },
-    passwordResetToken: {
-        type:String,
-        select: false
-    },
-    passwordResetExpires:{
-        type:Date,
-        select: false
-    },
-})
+    hash: { type: String },
+    salt: { type: String },
+    recovery: {
+        type: {
+            token: String,
+            date: Date
+        },
+        default: {}
+    }
+},{ timestamps: true });
 
-const User = mongoose.model('User', Userchema)
-module.exports = User
+FuncionarioSchema.plugin(uniqueValidator, { message: "Já está sendo utilizado" })   
+
+UsuarioSchema.methods.setSenha = function (password) {
+    this.salt = crypto.randomBytes(16).toString("hex");
+    this.hash = crypto.pbkdf2Sync(password, this.salt, 1000, 512, "sha512").toString("hex");
+}
+
+UsuarioSchema.methods.validarSenha = function (password) {
+    const hash = crypto.pbkdf2Sync(password, this.salt, 1000, 512, "sha512").toString("hex");
+    return hash === this.hash
+}
+
+UsuarioSchema.methods.gerarToken = function () {
+    const hoje = new Date();
+    const exp = new Date(hoje);
+    exp.setDate(hoje.getDate() + 15)
+
+    return jwt.sign({
+        id: this._id,
+        email: this.email,
+        nome: this.nome,
+        exp:parseFloat(exp.getTime() /1000, 10)
+    }, secret);
+}
+
+UsuarioSchema.methods.enviarAuthJson = function(){
+    return{
+        _id: this._id,
+        nome: this.nome,
+        email: this.email,
+        loja: this.loja,
+        role: this.permissao,
+        token:this.gerarToken()
+    }
+}
+
+module.exports = mongoose.model('Usuario', UsuarioSchema)
+
+

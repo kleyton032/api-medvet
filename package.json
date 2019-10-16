@@ -14,11 +14,13 @@
     "body-parser": "^1.19.0",
     "compression": "^1.7.4",
     "cors": "^2.8.5",
+    "crypto": "^1.0.1",
     "dotenv": "^8.1.0",
     "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.15",
     "mongoose": "^5.6.8",
-    "mongoose-unique-validator": "^2.0.3",
+    "mongoose-unique-validation": "^0.1.0",
     "morgan": "^1.9.1"
   },
   "devDependencies": {

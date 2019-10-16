@@ -20,7 +20,7 @@ app.use(bodyParser.urlencoded({ extended: true}));
 
 //config mongo
 const dbs = require('../config/database')
-const dbURI = isProduction ? dbs.dbProduction : dbs.dbTest
+const dbURI = isProduction ? dbs.dbProduction : dbs.dbCloud
 mongoose.connect(dbURI, {useNewUrlParser: true});
 
 //config view engine
