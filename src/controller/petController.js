@@ -1,6 +1,5 @@
 const mongoose = require('mongoose')
 const Pet = mongoose.model('Pet')
-const Tutor = require('../models/Tutor')
 
 class PetController{
     registrar(req, res, next){
@@ -19,7 +18,7 @@ class PetController{
     }
 
     getPetId(req, res, next){
-        Pet.findById(req.params.id).then((pet)=>{
+        Pet.findById(req.params.id).populate({path: "tutor"}).then((pet)=>{
             if(!pet){
                 return res.status(422).json({ error: "Pet não registrado" })
             }

@@ -1,23 +1,28 @@
-const express = require('express')
+const mongoose = require('mongoose');
+const Funcionario = mongoose.model('Funcionario')
 
-const Funcionario = require('../models/Funcionario')
-const Pet = require('../models/Pet')
+class FuncionarioController {
 
-const router = express.Router();
+    registrar(req, res, next) {
+        const funcDados = req.body
 
-router.post('/registrarFuncionario', async(req, res)=>{
-    try {
-        const funcionario = await Funcionario.create(req.body);
-        res.send({funcionario})
-    } catch (error) {
-        res.status(400).send({ error: 'Erro no cadastro de Funcionário' });
-        console.log(error)
+        const funcionario = new Funcionario(funcDados)
+
+        funcionario.save().then((funcionario) => {
+            res.json({ funcionario })
+        }).catch((err) => {
+            console.log(err)
+            next(err)
+        })
     }
-});
 
-//alterar funcionairo
-//listar funcionario pelo id
-//listar todos funcionario
-//inativar funcionario ** verificar para alterar o model
+    //alterar funcionairo
+    //listar funcionario pelo id
+    //listar todos funcionario
+    //inativar funcionario ** verificar para alterar o model
 
-module.exports = router
+
+}
+
+
+module.exports = FuncionarioController;

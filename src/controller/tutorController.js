@@ -14,7 +14,7 @@ class TutorController {
             }
         });
         */
-       console.log(tutor)
+        console.log(tutor)
 
         const tutorDao = new Tutor(tutor)
 
@@ -25,25 +25,16 @@ class TutorController {
             next(err)
         })
     }
-}
 
-/*
-router.get('/tutores/:tutor_id', async (req, res)=>{
-    try {
-       //Fazendo uma consulta no banco de dados
-        const tutor = await Tutor.findById(req.params.tutor_id)
-         //Realizando consulta na tabela pets e retornando o tutor vinculado a ela.
-        const pets = await Pet.find({tutor:req.params.tutor_id})
-        res.json({
-            tutor, 
-            pets
-        })
-    } catch (error) {
-        res.send('Erro ao tentar Selecionar Todos os usuários...: ' + error);
-        console.log(error)
+    getTutorId(req, res, next) {
+        Tutor.findById(req.params.id).then((tutor) => {
+            if (!tutor) {
+                return res.status(422).json({ error: "Pet não registrado" })
+            }
+            return res.json({ tutor })
+        }).catch(next)
     }
- }); 
 
- */
+}
 
 module.exports = TutorController;

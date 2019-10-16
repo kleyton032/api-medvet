@@ -7,6 +7,7 @@ const tutorController = new TutorController();
 
 
 router.post('/registrar',tutorController.registrar)
+router.get('/:id',tutorController.getTutorId)
 //router.put('/:id', auth.required, usuarioController.update)
 //router.delete('/', auth.required, usuarioController.remove)
 

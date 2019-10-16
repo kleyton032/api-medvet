@@ -1,4 +1,5 @@
-const mongoose = require('../config/database');
+const mongoose = require('mongoose')
+const uniqueValidator = require('mongoose-unique-validator');
 
 const VeterinarioSchema = new mongoose.Schema({
     nome:{
@@ -16,46 +17,24 @@ const VeterinarioSchema = new mongoose.Schema({
     },
     crmv:{
         type: Number,
-        required:true
+        required:true,
+        unique: true
     },
-    telefone:[{
-        type: Number,
-        required:true
-    }],
-    endereco: [{
-        logradouro:{
-            type:String,
-            required: true
+    telefones:{
+        type:[{type: String}]
+    },
+    endereco:{
+        type:{
+            local:{type: String, required: true},
+            numero:{type: String, required: true},
+            complemento:{type: String},
+            bairro:{type: String, required: true},
+            cidade:{type: String, required: true},
+            cep:{type: String, required: true},
         },
-        numero:{
-            type: String,
-            required: true
-        },
-        complemento:{
-            type:String,
-        },
-        bairro:{
-            type:String,
-            required: true
-        },
-        cidade:{
-            type:String,
-            required: true
-        },
-        estado:{
-            type:String,
-            required: true
-        },
-        cep:{
-            type:String,
-            required: true
-        }
-    }],
-    createAt: {
-        type: Date,
-        default: Date.now
+        required:true   
     }
-})
+},{timestamps: true})
 
 const Veterinario = mongoose.model('Vet', VeterinarioSchema)
 module.exports = Veterinario

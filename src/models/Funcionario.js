@@ -1,56 +1,41 @@
-const mongoose = require('../config/database');
+const mongoose = require('mongoose')
+const uniqueValidator = require('mongoose-unique-validator');
 
 const FuncionarioSchema = new mongoose.Schema({
-    nome:{
+    nome: {
         type: String,
         required: true
     },
-    cpf:{
+    cpf: {
         type: String,
+        required: true,
+        unique: true
+    },
+    funcao: {
+        type: [{ type: String }],
         required: true
     },
-    funcao:[{
-        type: String,
+    crmv: {
+        type: Number, 
+        unique: true
+    },
+    telefones: {
+        type: [{ type: String }]
+    },
+    endereco: {
+        type: {
+            local: { type: String, required: true },
+            numero: { type: String, required: true },
+            complemento: { type: String },
+            bairro: { type: String, required: true },
+            cidade: { type: String, required: true },
+            cep: { type: String, required: true },
+        },
         required: true
-    }],
-    endereco: [{
-        logradouro:{
-            type:String,
-            required: true
-        },
-        numero:{
-            type: String,
-            required: true
-        },
-        complemento:{
-            type:String,
-        },
-        bairro:{
-            type:String,
-            required: true
-        },
-        cidade:{
-            type:String,
-            required: true
-        },
-        estado:{
-            type:String,
-            required: true
-        },
-        cep:{
-            type:String,
-            required: true
-        }
-        }],
-        telefones:[{
-            type: String,
-            require: true
-        }],
-        createAt: {
-            type: Date,
-            default: Date.now
-        }
-})
+    }
+}, { timestamps: true })
 
-const Funcionario = mongoose.model('Funcionario', FuncionarioSchema)
-module.exports = Funcionario
+FuncionarioSchema.plugin(uniqueValidator, { message: "Já está sendo utilizado" })
+
+
+module.exports = mongoose.model('Funcionario', FuncionarioSchema)
