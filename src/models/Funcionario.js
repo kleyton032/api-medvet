@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+Schema = mongoose.Schema;
 const uniqueValidator = require('mongoose-unique-validator');
 
 const FuncionarioSchema = new mongoose.Schema({
@@ -32,7 +33,12 @@ const FuncionarioSchema = new mongoose.Schema({
             cep: { type: String, required: true },
         },
         required: true
-    }
+    },
+    usuario: {
+        type: Schema.Types.ObjectId,
+        ref: "Usuario",
+        required: [true,"não pode ficar vazia."]
+    },
 }, { timestamps: true })
 
 FuncionarioSchema.plugin(uniqueValidator, { message: "Já está sendo utilizado" })

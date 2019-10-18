@@ -17,11 +17,6 @@ const UsuarioSchema = new mongoose.Schema({
         index: true,
         match: [/\S+@\S+\.\S+/, 'é inválido.']
     },
-    funcionario: {
-        type: Schema.Types.ObjectId,
-        ref: "Funcionario",
-        required: [true,"não pode ficar vazia."]
-    },
     permissao: {
         type: Array,
         default: ["atendente"]
@@ -37,7 +32,7 @@ const UsuarioSchema = new mongoose.Schema({
     }
 },{ timestamps: true });
 
-FuncionarioSchema.plugin(uniqueValidator, { message: "Já está sendo utilizado" })   
+UsuarioSchema.plugin(uniqueValidator, { message: "Já está sendo utilizado" })   
 
 UsuarioSchema.methods.setSenha = function (password) {
     this.salt = crypto.randomBytes(16).toString("hex");
@@ -67,7 +62,6 @@ UsuarioSchema.methods.enviarAuthJson = function(){
         _id: this._id,
         nome: this.nome,
         email: this.email,
-        loja: this.loja,
         role: this.permissao,
         token:this.gerarToken()
     }
