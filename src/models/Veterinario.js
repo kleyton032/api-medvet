@@ -47,6 +47,7 @@ const VeterinarioSchema = Schema({
         },
         required: true
     },
+    /** 
     email: {
         type: String,
         lowercase: true,
@@ -54,6 +55,12 @@ const VeterinarioSchema = Schema({
         required: [true, "não pode ficar vazio."],
         index: true,
         match: [/\S+@\S+\.\S+/, 'é inválido.']
+    },
+    
+    password:{
+        type:String,
+        required: true,
+
     },
     permissao: {
         type: Array,
@@ -68,6 +75,7 @@ const VeterinarioSchema = Schema({
         },
         default: {}
     }
+    */
 }, { timestamps: true })
 
 VeterinarioSchema.plugin(uniqueValidator, { message: "Já está sendo utilizado" })

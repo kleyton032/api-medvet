@@ -21,6 +21,15 @@ const UsuarioSchema = new mongoose.Schema({
         type: Array,
         default: ["atendente"]
     },
+    veterinario:{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Veterinario",
+    
+    },
+    funcionario:{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Funcionario",
+    },
     hash: { type: String },
     salt: { type: String },
     recovery: {
@@ -63,7 +72,9 @@ UsuarioSchema.methods.enviarAuthJson = function(){
         nome: this.nome,
         email: this.email,
         role: this.permissao,
-        token:this.gerarToken()
+        token:this.gerarToken(),
+        veterinario: this.veterinario,
+        funcionario: this.funcionario
     }
 }
 

@@ -30,7 +30,7 @@ class UsuarioController {
             return res.status(422).json({ error: "A senha não pode ser vazia" })
         }
 
-        Usuario.findOne({ email }).then((usuario) => {
+        Usuario.findOne({ email }).populate({ path: "veterinario" }).populate({path: "funcionario" }).then((usuario) => {
             if (!usuario) {
                 return res.status(401).json({ error: "Usuário não registrado" })
             }

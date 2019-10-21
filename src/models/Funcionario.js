@@ -12,13 +12,13 @@ const FuncionarioSchema = new mongoose.Schema({
         required: true,
         unique: true
     },
+    dataNascimento:{
+        type: String,
+        required: true
+    },
     funcao: {
         type: [{ type: String }],
         required: true
-    },
-    crmv: {
-        type: Number, 
-        unique: true
     },
     telefones: {
         type: [{ type: String }]
@@ -33,11 +33,6 @@ const FuncionarioSchema = new mongoose.Schema({
             cep: { type: String, required: true },
         },
         required: true
-    },
-    usuario: {
-        type: Schema.Types.ObjectId,
-        ref: "Usuario",
-        required: [true,"não pode ficar vazia."]
     },
 }, { timestamps: true })
 

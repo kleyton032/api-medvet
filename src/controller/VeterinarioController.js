@@ -1,25 +1,29 @@
 const mongoose = require('mongoose')
 const Veterinario = mongoose.model('Veterinario')
+const Usuario = mongoose.model('Usuario')
 
 class VeterinarioController {
 
-    registrar(req, res, next) {
-        const { nome, cpf, dataNascimento, crmv, ufcrmv, especialidades, telefones, endereco, email, password } = req.body;
+    async registrar(req, res, next) {
+        const { nome, cpf, dataNascimento, crmv, ufcrmv, especialidades, telefones, endereco } = req.body;
+
+        const { email, password } = req.body;
 
         if (!nome || !cpf || !dataNascimento || !crmv || !ufcrmv || !especialidades || !telefones || !endereco || !email || !password) return res.status(422).json({ error: "Preencha todos os campos para o cadastro." })
 
-        const veterinario = new Veterinario({ nome, cpf, dataNascimento, crmv, ufcrmv, especialidades, telefones, endereco, email, password })
-        veterinario.setSenha(password)
-
-        veterinario.save().then((veterinario) => {
-            res.json({
-                veterinario: veterinario.enviarAuthJson(),
-                //veterinario
-            })
+        const veterinario = await Veterinario.create({ nome, cpf, dataNascimento, crmv, ufcrmv, especialidades, telefones, endereco })
+        
+        const usuario = new Usuario({ nome: veterinario.nome, email, password, permissao: "veterinario", veterinario: veterinario.id })
+        usuario.setSenha(password)
+        console.log(veterinario.id)
+        usuario.save().then((usuario) => {
+            res.json({ usuario: usuario.enviarAuthJson() })
         }).catch((err) => {
             console.log(err)
             next(err)
         })
+
+
     }
     //alterar vet
     //inativar vet
