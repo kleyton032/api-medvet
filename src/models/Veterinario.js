@@ -6,6 +6,10 @@ const secret = require('../config').secret
 Schema = mongoose.Schema;
 
 const VeterinarioSchema = Schema({
+    usuario:{
+        type: Schema.Types.ObjectId,
+        ref: "Usuario",
+    },
     nome: {
         type: String,
         required: true
@@ -47,35 +51,6 @@ const VeterinarioSchema = Schema({
         },
         required: true
     },
-    /** 
-    email: {
-        type: String,
-        lowercase: true,
-        unique: true,
-        required: [true, "não pode ficar vazio."],
-        index: true,
-        match: [/\S+@\S+\.\S+/, 'é inválido.']
-    },
-    
-    password:{
-        type:String,
-        required: true,
-
-    },
-    permissao: {
-        type: Array,
-        default: ["veterinario"]
-    },
-    hash: { type: String },
-    salt: { type: String },
-    recovery: {
-        type: {
-            token: String,
-            date: Date
-        },
-        default: {}
-    }
-    */
 }, { timestamps: true })
 
 VeterinarioSchema.plugin(uniqueValidator, { message: "Já está sendo utilizado" })
