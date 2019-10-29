@@ -21,17 +21,6 @@ const UsuarioSchema = new mongoose.Schema({
         type: Array,
         default: ["atendente"]
     },
-    /** 
-    veterinario:{
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Veterinario",
-    
-    },
-    funcionario:{
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Funcionario",
-    },
-    */
     hash: { type: String },
     salt: { type: String },
     recovery: {
@@ -78,6 +67,19 @@ UsuarioSchema.methods.enviarAuthJson = function(){
         //veterinario: this.veterinario,
         //funcionario: this.funcionario
     }
+}
+
+//Recuperação de senha
+UsuarioSchema.methods.gerarTokenRecuperacao = function(){
+    this.recovery = {};
+    this.recovery.token = crypto.randomBytes(16).toString("hex");
+    this.recovery.date = new Date( new Date().getTime() + 24*60*60*1000 );
+    return this.recovery;
+}
+
+UsuarioSchema.methods.finalizarTokenRecuperacao = function(){
+    this.recovery = {token: null, date: null}
+    return this.recovery
 }
 
 module.exports = mongoose.model('Usuario', UsuarioSchema)

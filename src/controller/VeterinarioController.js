@@ -14,7 +14,7 @@ class VeterinarioController {
             
             const usuario = new Usuario({ nome, email, password, permissao: "veterinario"})
             usuario.setSenha(password)
-            const veterinario = new Veterinario({nome, cpf, dataNascimento, crmv, ufcrmv, especialidades, telefones, endereco, })
+            const veterinario = new Veterinario({nome, cpf, dataNascimento, crmv, ufcrmv, especialidades, telefones, endereco, usuario: usuario._id })
     
             await usuario.save()
             await veterinario.save()
