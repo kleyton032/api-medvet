@@ -6,6 +6,7 @@ router.use('/funcionario', require('./funcionario'))
 router.use('/usuario', require('./usuario'))
 router.use('/especialidade', require('./especialidade'))
 router.use('/veterinario', require('./veterinario'))
+router.use('/servico', require('./servicos'))
 
 
 
