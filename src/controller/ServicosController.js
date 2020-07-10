@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 const Servicos = mongoose.model("Servicos")
-const ServicosEstetica = mongoose.model('ServicoEstetica')
 
 class ServicosController {
 
@@ -22,11 +21,28 @@ class ServicosController {
             console.log(error);
             next(error);
         }
+    }
 
+        async listServicos(req, res, next) {
+            try {
+                const services = await Servicos.find()
+                res.send({services})
+
+            } catch (error) {
+                console.log(error);
+                next(error);
+            }    
+        }
+
+
+        //listar servicos
+        //listar unico servico
+        //editar servico
+        //remover servico
 
 
     }
-}
+
 
 module.exports = ServicosController;
 

@@ -7,12 +7,12 @@ class VeterinarioController {
     async registrar(req, res, next) {
         const { nome, cpf, dataNascimento, crmv, ufcrmv, especialidades, telefones, endereco } = req.body;
 
-        const { email, password } = req.body;
+        const { email, password, permissao } = req.body;
 
         try {
-            if (!nome || !cpf || !dataNascimento || !crmv || !ufcrmv || !especialidades || !telefones || !endereco || !email || !password) return res.status(422).json({ error: "Preencha todos os campos para o cadastro." })
+            if (!nome || !cpf || !dataNascimento || !crmv || !ufcrmv || !especialidades || !telefones || !endereco || !email || !password || !permissao) return res.status(422).json({ error: "Preencha todos os campos para o cadastro." })
             
-            const usuario = new Usuario({ nome, email, password, permissao: "veterinario"})
+            const usuario = new Usuario({ nome, email, password, permissao})
             usuario.setSenha(password)
             const veterinario = new Veterinario({nome, cpf, dataNascimento, crmv, ufcrmv, especialidades, telefones, endereco, usuario: usuario._id })
     
