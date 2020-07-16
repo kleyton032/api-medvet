@@ -6,7 +6,7 @@ const UsuarioController = require('../../../controller/UsuarioController');
 const usuarioController = new UsuarioController();
 
 router.post('/registrar',usuarioController.registrar)
-router.post('/',usuarioController.login)
+router.post('/login',usuarioController.login)
 
 
 router.put('/:id', auth.required, /*Validation(UsuarioValidation.upadate),*/ usuarioController.update)
