@@ -34,7 +34,7 @@ class ServicosController {
         }
     }
 
-    //listar unico servico
+    //retonrar unico servico
     async getServId(req, res, next) {
         const { id: _id } = req.params;
         try {
@@ -68,7 +68,17 @@ class ServicosController {
     }
     
     //remover servico
-
+    async remove(req, res, next){
+        const { id: _id } = req.params;
+        try {
+            const service = Servicos.findById(_id)
+            if (!service) return res.status(422).json({ error: "Serviço não encontrado." })
+            await service.remove()
+            return res.send({delatado: true})
+        } catch (error) {
+            console.log(error)
+            next(error)
+        }
 
 }
 
