@@ -9,7 +9,7 @@ const ServicosSchema = new mongoose.Schema({
         type: Number,
         required: true
     }
-})
+}, { timestamps: true })
 
 const ServicosEsteticaSchema = new mongoose.Schema({
     descricao: {
@@ -20,7 +20,7 @@ const ServicosEsteticaSchema = new mongoose.Schema({
         type: Number,
         required: true
     }
-})
+}, { timestamps: true })
 
 const ServicosExamesSchema = new mongoose.Schema({
     descricao: {
@@ -31,7 +31,7 @@ const ServicosExamesSchema = new mongoose.Schema({
         type: Number,
         required: true
     }
-})
+},{ timestamps: true })
 
 const ServicosCirurgiasSchema = new mongoose.Schema({
     descricao: {
@@ -42,7 +42,7 @@ const ServicosCirurgiasSchema = new mongoose.Schema({
         type: Number,
         required: true
     }
-})
+}, { timestamps: true })
 
 const ServicosVacinasSchema = new mongoose.Schema({
     descricao: {
@@ -53,7 +53,7 @@ const ServicosVacinasSchema = new mongoose.Schema({
         type: Number,
         required: true
     }
-})
+}, { timestamps: true })
 
 const Servicos = mongoose.model("Servicos", ServicosSchema)
 const ServicosEstetica = mongoose.model("ServicosEsteticas", ServicosEsteticaSchema)
