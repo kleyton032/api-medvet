@@ -36,7 +36,7 @@ const FuncionarioSchema = new mongoose.Schema({
     },
 }, { timestamps: true })
 
-FuncionarioSchema.plugin(uniqueValidator, { message: "Já está sendo utilizado" })
+FuncionarioSchema.plugin(uniqueValidator, { message: "CPF Já está sendo utilizado" })
 
 
 module.exports = mongoose.model('Funcionario', FuncionarioSchema)

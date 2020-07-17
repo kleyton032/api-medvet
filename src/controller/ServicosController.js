@@ -14,7 +14,7 @@ class ServicosController {
 
             const service = new Servicos({ descricao, valor });
 
-            await serv.save();
+            await service.save();
             return res.send({ service });
 
         } catch (error) {
@@ -46,39 +46,41 @@ class ServicosController {
             next(error);
         }
     }
-   
+
     //editar servico
     async updateServ(req, res, next) {
         const { id: _id } = req.params;
-        const { descricao, valor} = req.body;
+        const { descricao, valor } = req.body;
         try {
             const service = await Servicos.findById(_id);
             if (!service) return res.status(422).json({ error: "Serviço não encontrado." })
 
-            if(descricao) service.descricao = descricao;
-            if(valor) service.valor = valor;
+            if (descricao) service.descricao = descricao;
+            if (valor) service.valor = valor;
 
             await service.save()
-            return res.send({service})
+            return res.send({ service })
 
         } catch (error) {
             console.log(error);
             next(error);
         }
     }
-    
+
     //remover servico
-    async remove(req, res, next){
+    async remove(req, res, next) {
         const { id: _id } = req.params;
         try {
             const service = Servicos.findById(_id)
             if (!service) return res.status(422).json({ error: "Serviço não encontrado." })
             await service.remove()
-            return res.send({delatado: true})
+            return res.send({ delatado: true })
         } catch (error) {
             console.log(error)
             next(error)
         }
+
+    }
 
 }
 
