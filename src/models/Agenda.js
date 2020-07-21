@@ -10,11 +10,6 @@ const AgendaSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref:'Tutor'
     },
-    tipoAtendimento:{
-        type: mongoose.Schema.Types.ObjectId,
-        ref:'TipoAtendimento',
-        required: true
-    },
     data:{
         type: Date,
         default: Date.UTC,

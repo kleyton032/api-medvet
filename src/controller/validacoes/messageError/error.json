@@ -1,0 +1,14 @@
+{
+    "AUTORIZACAO_NAO_PERMITIDA": {
+      "error": {
+        "message": "Operação Não Permitida.",
+        "code": "AUTORIZACAO_NAO_PERMITIDA"
+      }
+    },
+    "DATA_INVALIDA": {
+      "error": {
+        "message": "Formato de Data Inválido.",
+        "code": "DATA_INVALIDA"
+      }
+    }
+}
