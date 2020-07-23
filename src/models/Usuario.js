@@ -13,13 +13,55 @@ const UsuarioSchema = new mongoose.Schema({
         type: String,
         lowercase: true,
         unique: true,
-        required: [true,"não pode ficar vazio."],
         index: true,
         match: [/\S+@\S+\.\S+/, 'é inválido.']
+    },
+    cpf:{
+        type: String,
+        required: [true,"não pode ficar vazio."],
+        unique: true,
+    },
+    telefones:{
+        type: [{ type: String }],
+        required: [true,"não pode ficar vazio."]
+    },
+    endereco:{
+        type: {
+            local: { type: String },
+            numero: { type: String },
+            complemento: { type: String },
+            bairro: { type: String},
+            cidade: { type: String },
+            CEP: { type: String},
+        },
+    },
+    dataNascimento:{
+        type: String,
+        required: [true,"não pode ficar vazio."]
+    },
+    funcao:{
+        type: String,
+        required: [true,"não pode ficar vazio."]
+    },
+    crmv: {
+        type: Number,
+        unique: true
+    },
+    ufcrmv: {
+        type: String,
     },
     permissao: {
         type: Array,
         default: ["atendente"]
+    },
+    unidade:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref:'Unidade',
+        required: [true,"não pode ficar vazio."],
+    },
+    genero:{
+        type: String,
+        required: [true,"não pode ficar vazio."]
     },
     hash: { type: String },
     salt: { type: String },
@@ -32,15 +74,15 @@ const UsuarioSchema = new mongoose.Schema({
     }
 },{ timestamps: true });
 
-UsuarioSchema.plugin(uniqueValidator, { message: "Já está sendo utilizado" })   
+UsuarioSchema.plugin(uniqueValidator, { message: "{PATH} Já está sendo utilizado" })   
 
 UsuarioSchema.methods.setSenha = function (password) {
     this.salt = crypto.randomBytes(16).toString("hex");
-    this.hash = crypto.pbkdf2Sync(password, this.salt, 1000, 512, "sha512").toString("hex");
+    this.hash = crypto.pbkdf2Sync(password, this.salt, 1000, 100, "sha512").toString("hex");
 }
 
 UsuarioSchema.methods.validarSenha = function (password) {
-    const hash = crypto.pbkdf2Sync(password, this.salt, 1000, 512, "sha512").toString("hex");
+    const hash = crypto.pbkdf2Sync(password, this.salt, 1000, 100, "sha512").toString("hex");
     return hash === this.hash
 }
 
@@ -57,6 +99,23 @@ UsuarioSchema.methods.gerarToken = function () {
     }, secret);
 }
 
+UsuarioSchema.methods.getUserId = function(){
+    return{
+        _id: this._id,
+        nome: this.nome,
+        email: this.email,
+        cpf: this.cpf,
+        dataNascimento: this.dataNascimento,
+        role: this.permissao,
+        funcao: this.funcao,
+        telefones: this.telefones,
+        endereco: this.endereco,
+        genero: this.genero,
+        crmv: this.crmv, 
+        ufcrmv: this.ufcrmv
+    }
+}
+
 UsuarioSchema.methods.enviarAuthJson = function(){
     return{
         _id: this._id,
@@ -64,8 +123,6 @@ UsuarioSchema.methods.enviarAuthJson = function(){
         email: this.email,
         role: this.permissao,
         token:this.gerarToken(),
-        //veterinario: this.veterinario,
-        //funcionario: this.funcionario
     }
 }
 

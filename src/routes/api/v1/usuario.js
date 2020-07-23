@@ -8,8 +8,11 @@ const usuarioController = new UsuarioController();
 router.post('/registrar',usuarioController.registrar)
 router.post('/login',usuarioController.login)
 
+router.get('/user/:id',auth.required, usuarioController.getIdUser)
+router.put('/updateUser/:id', auth.required, usuarioController.updateUser)
 
-router.put('/:id', auth.required, /*Validation(UsuarioValidation.upadate),*/ usuarioController.update)
+
+//router.put('/:id', auth.required, /*Validation(UsuarioValidation.upadate),*/ usuarioController.update)
 //router.delete('/', auth.required, usuarioController.remove)
 
 router.get('/recuperar-senha', usuarioController.forgotPassword)

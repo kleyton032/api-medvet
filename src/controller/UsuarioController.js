@@ -3,20 +3,23 @@ const Usuario = mongoose.model('Usuario')
 const enviarEmailRecovery = require('../helpers/email-forgot')
 
 class UsuarioController {
-    registrar(req, res, next) {
-        const { nome, email, password, } = req.body;
 
-        if (!nome || !email || !password) return res.status(422).json({ error: "Preencha todos os campos para o cadastro." })
+    async registrar(req, res, next) {
+        try {
+            const { nome, email, password, cpf, telefones, endereco, dataNascimento, funcao, crmv, ufcrmv, permissao, unidade, genero } = req.body;
 
-        const usuario = new Usuario({ nome, email, password })
-        usuario.setSenha(password)
+            if (!nome || !email || !password) return res.status(422).json({ error: "Preencha todos os campos para o cadastro." })
 
-        usuario.save().then((usuario) => {
-            res.json({ usuario: usuario.enviarAuthJson() })
-        }).catch((err) => {
-            console.log(err)
-            next(err)
-        })
+            const usuario = new Usuario({ nome, email, password, cpf, telefones, endereco, dataNascimento, funcao, crmv, ufcrmv, permissao, unidade, genero })
+            usuario.setSenha(password)
+
+            await usuario.save();
+            res.send({ usuario: usuario.enviarAuthJson() })
+        } catch (error) {
+            next(error);
+        }
+
+
     }
 
     //autenticar usuário
@@ -49,31 +52,6 @@ class UsuarioController {
             next(err)
         })
 
-    }
-
-    update(req, res, next) {
-        const { nome, email, password } = req.body;
-
-        Usuario.findById(req.payload.id).then(usuario => {
-            if (!usuario) {
-                return res.status(401).json({ error: "Usuário não registrado" })
-            }
-            if (typeof nome !== 'undefined') usuario.nome = nome;
-            if (typeof email !== 'undefined') usuario.email = email;
-            if (typeof password !== 'undefined') usuario.setSenha(password);
-            usuario.save()
-                .then(() => {
-                    return res.json({
-                        usuario: usuario.enviarAuthJson()
-                    })
-                }).catch((err) => {
-                    console.log(err)
-                    next(err)
-                })
-        }).catch((err) => {
-            console.log(err)
-            next(err)
-        })
     }
 
     forgotPassword(req, res, next) {
@@ -121,9 +99,9 @@ class UsuarioController {
 
     completeForgot(req, res, next) {
         const { token, password } = req.body
-        
+
         if (!token || !password) return res.render('recovery/store', { error: "Preencha novamente com sua nova senha", success: null })
-        
+
         Usuario.findOne({ "recovery.token": token }).then((usuario) => {
             if (!usuario) {
                 return res.render('recovery', { error: "Usuário não identificado", success: null })
@@ -136,7 +114,7 @@ class UsuarioController {
                     success: "Senha alterada com sucesso.",
                     token: null
                 })
-            }).catch((err)=>{
+            }).catch((err) => {
                 console.log(err)
                 next(err)
             })
@@ -144,13 +122,85 @@ class UsuarioController {
         })
 
     }
+
+    //retonar unico usuário
+    async getIdUser(req, res, next) {
+        const { id: _id } = req.params;
+        try {
+            const user = await Usuario.findById(_id)
+            res.send({ user: user.getUserId() })
+
+        } catch (error) {
+            next(error)
+        }
+    }
+
+    //alterar usuário
+    async updateUser(req, res, next) {
+        const { id: _id } = req.params;
+        console.log(_id)
+        const { nome, email, password, cpf, telefones, endereco, dataNascimento, funcao, crmv, ufcrmv, genero } = req.body;
+        try {
+            const user = await Usuario.findById(_id);
+            if (!user) return res.status(422).json({ error: "Usuário não encontrado!" })
+
+            if (nome) user.nome = nome;
+            if (email) user.email = email;
+            if (password) user.password = password;
+            if (cpf) user.cpf = cpf;
+            if (dataNascimento) user.dataNascimento = dataNascimento;
+            if (telefones) user.telefones = telefones;
+            if (endereco) user.endereco = endereco;
+            if (funcao) user.funcao = funcao;
+            if (crmv) user.crmv = crmv;
+            if (ufcrmv) user.ufcrmv = ufcrmv;
+            if (genero) user.genero = genero;
+
+            await user.save()
+            return res.send({ user: user.getUserId() })
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    /**
+     *   update(req, res, next) {
+        const { nome, email, password } = req.body;
+
+        Usuario.findById(req.payload.id).then(usuario => {
+            if (!usuario) {
+                return res.status(401).json({ error: "Usuário não registrado" })
+            }
+            if (typeof nome !== 'undefined') usuario.nome = nome;
+            if (typeof email !== 'undefined') usuario.email = email;
+            if (typeof password !== 'undefined') usuario.setSenha(password);
+            usuario.save()
+                .then(() => {
+                    return res.json({
+                        usuario: usuario.enviarAuthJson()
+                    })
+                }).catch((err) => {
+                    console.log(err)
+                    next(err)
+                })
+        }).catch((err) => {
+            console.log(err)
+            next(err)
+        })
+    }
+     */
+
+    //listar todos usuários
+    //inativar usuário
+    //validar usuário
+    //verificar permissões usuario
+
 }
 
 
-//alterar usuário
-//listar todos usuários
-//inativar usuário
 
-//validar usuário
-//verificar permissões usuario
+
+
+
+
 module.exports = UsuarioController;
