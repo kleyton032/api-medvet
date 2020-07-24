@@ -71,6 +71,10 @@ const UsuarioSchema = new mongoose.Schema({
             date: Date
         },
         default: {}
+    }, 
+    status:{
+        type: String,
+        default: "ativo"
     }
 },{ timestamps: true });
 

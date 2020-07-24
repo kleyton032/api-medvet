@@ -37,6 +37,9 @@ class UsuarioController {
             if (!usuario) {
                 return res.status(401).json({ error: "Usuário não registrado" })
             }
+            
+            if(usuario.status === "inativo") return res.status(401).json({ error: "Usuário inativo, Sem acesso ao sistema!!" })
+            
             if (!usuario.validarSenha(password)) {
                 return res.status(401).json({ error: "Senha inválida" })
             }
