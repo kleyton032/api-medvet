@@ -3,16 +3,22 @@ const auth = require("../../auth")
 
 const UsuarioController = require('../../../controller/UsuarioController');
 
-const { userValidation } = require('../../../controller/validacoes/userAdminValidation')
+const { userValidation } = require('../../../controller/validacoes/userValidation')
 
 const usuarioController = new UsuarioController();
 
-router.post('/registrar', usuarioController.registrar)
-router.post('/login', usuarioController.login)
+//router admin
+router.post('/register', auth.required, userValidation.admin, usuarioController.create)
+router.put('/inactivateUser/:id', auth.required, userValidation.admin, usuarioController.inactivateUser)
+router.put('/activeUser/:id', auth.required, userValidation.admin, usuarioController.activeUser)
+router.get('/getUsers', auth.required, userValidation.admin, usuarioController.show)
 
-router.get('/user/:id', auth.required, userValidation.med, usuarioController.getIdUser)
+
+router.post('/login', usuarioController.login)
+router.get('/user/:id', auth.required, usuarioController.getIdUser)
 router.put('/updateUser/:id', auth.required, usuarioController.updateUser)
 
+//forgot password
 router.get('/recuperar-senha', usuarioController.forgotPassword)
 router.post('/recuperar-senha', usuarioController.createForgotPassword)
 router.get('/senha-recuperada', usuarioController.showCompleteForgot)

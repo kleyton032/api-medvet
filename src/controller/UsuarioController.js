@@ -4,11 +4,11 @@ const enviarEmailRecovery = require('../helpers/email-forgot')
 
 class UsuarioController {
 
-    async registrar(req, res, next) {
+    async create(req, res, next) {
         try {
             const { nome, email, password, cpf, telefones, endereco, dataNascimento, funcao, crmv, ufcrmv, permissao, unidade, genero } = req.body;
 
-            if (!nome || !email || !password) return res.status(422).json({ error: "Preencha todos os campos para o cadastro." })
+            if (!nome || !email || !password || !cpf || !telefones || !endereco || !dataNascimento || !funcao || !permissao || !unidade || !genero) return res.status(422).json({ error: "Preencha todos os campos para o cadastro." })
 
             const usuario = new Usuario({ nome, email, password, cpf, telefones, endereco, dataNascimento, funcao, crmv, ufcrmv, permissao, unidade, genero })
             usuario.setSenha(password)
@@ -37,9 +37,9 @@ class UsuarioController {
             if (!usuario) {
                 return res.status(401).json({ error: "Usuário não registrado" })
             }
-            
-            if(usuario.status === "inativo") return res.status(401).json({ error: "Usuário inativo, Sem acesso ao sistema!!" })
-            
+
+            if (usuario.status === "inativo") return res.status(401).json({ error: "Falha na autenticação" })
+
             if (!usuario.validarSenha(password)) {
                 return res.status(401).json({ error: "Senha inválida" })
             }
@@ -47,14 +47,78 @@ class UsuarioController {
                 usuario: usuario.enviarAuthJson()
 
             });
-            console.log(usuario.id)
-
 
         }).catch((err) => {
             console.log(err)
             next(err)
         })
 
+    }
+
+    //retonar unico usuário
+    async getIdUser(req, res, next) {
+        const { id: _id } = req.params;
+        try {
+            const user = await Usuario.findById(_id)
+            res.send({ user: user.getUserId() })
+
+        } catch (error) {
+            next(error)
+        }
+    }
+
+    //alterar usuário
+    async updateUser(req, res, next) {
+        const { id: _id } = req.params;
+        console.log(_id)
+        const { nome, email, password, cpf, telefones, endereco, dataNascimento, funcao, crmv, ufcrmv, genero } = req.body;
+        try {
+            const user = await Usuario.findById(_id);
+            if (!user) return res.status(422).json({ error: "Usuário não encontrado!" })
+
+            if (nome) user.nome = nome;
+            if (email) user.email = email;
+            if (password) user.password = password;
+            if (cpf) user.cpf = cpf;
+            if (dataNascimento) user.dataNascimento = dataNascimento;
+            if (telefones) user.telefones = telefones;
+            if (endereco) user.endereco = endereco;
+            if (funcao) user.funcao = funcao;
+            if (crmv) user.crmv = crmv;
+            if (ufcrmv) user.ufcrmv = ufcrmv;
+            if (genero) user.genero = genero;
+
+            await user.save()
+            return res.send({ user: user.getUserId() })
+        } catch (error) {
+            next(error);
+        }
+    }
+    //inativar usuário
+    async inactivateUser(req, res, next) {
+        const { id: _id } = req.params;
+        try {
+            const user = await Usuario.findById(_id);
+            if (!user) return res.status(422).json({ error: "Usuário não encontrado!" })
+            user.status = "inativo"
+            await user.save()
+            res.send({ user: user.getUserId() })
+        } catch (error) {
+            next(error)
+        }
+    }
+
+    async activeUser(req,res, next) {
+        const { id: _id } = req.params;
+        try {
+            const user = await Usuario.findById(_id);
+            if (!user) return res.status(422).json({ error: "Usuário não encontrado!" })
+            user.status = "ativo"
+            await user.save()
+            res.send({ user: user.getUserId() })
+        } catch (error) {
+            next(error)
+        }
     }
 
     forgotPassword(req, res, next) {
@@ -125,46 +189,17 @@ class UsuarioController {
         })
 
     }
-
-    //retonar unico usuário
-    async getIdUser(req, res, next) {
-        const { id: _id } = req.params;
-        try {
-            const user = await Usuario.findById(_id)
-            res.send({ user: user.getUserId() })
-
-        } catch (error) {
-            next(error)
-        }
-    }
-
-    //alterar usuário
-    async updateUser(req, res, next) {
-        const { id: _id } = req.params;
-        console.log(_id)
-        const { nome, email, password, cpf, telefones, endereco, dataNascimento, funcao, crmv, ufcrmv, genero } = req.body;
-        try {
-            const user = await Usuario.findById(_id);
-            if (!user) return res.status(422).json({ error: "Usuário não encontrado!" })
-
-            if (nome) user.nome = nome;
-            if (email) user.email = email;
-            if (password) user.password = password;
-            if (cpf) user.cpf = cpf;
-            if (dataNascimento) user.dataNascimento = dataNascimento;
-            if (telefones) user.telefones = telefones;
-            if (endereco) user.endereco = endereco;
-            if (funcao) user.funcao = funcao;
-            if (crmv) user.crmv = crmv;
-            if (ufcrmv) user.ufcrmv = ufcrmv;
-            if (genero) user.genero = genero;
-
-            await user.save()
-            return res.send({ user: user.getUserId() })
-        } catch (error) {
-            next(error);
-        }
-    }
+     //listar todos usuários
+     async show(req, res, next){
+       try {
+           const users = await Usuario.find().populate({path: 'unidade', select: 'nome cnpj'});
+           res.send({users})
+       } catch (error) {
+           next(error);
+       }   
+     }
+   
+    //verificar permissões usuario
 
     /**
      *   update(req, res, next) {
@@ -193,10 +228,7 @@ class UsuarioController {
     }
      */
 
-    //listar todos usuários
-    //inativar usuário
-    //validar usuário
-    //verificar permissões usuario
+   
 
 }
 

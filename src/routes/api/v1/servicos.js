@@ -6,7 +6,7 @@ const CirurgiaController = require('../../../controller/CirurgiaController');
 const VacinaController = require('../../../controller/VacinaController');
 const EsteticaController = require('../../../controller/EsteticaController');
 const auth = require('../../auth');
-const { userValidation } = require('../../../controller/validacoes/userAdminValidation');
+const { userValidation } = require('../../../controller/validacoes/userValidation');
 
 const servicosController = new ServicosController();
 const exameController = new ExameController();

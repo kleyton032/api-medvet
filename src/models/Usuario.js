@@ -63,14 +63,15 @@ const UsuarioSchema = new mongoose.Schema({
         type: String,
         required: [true,"não pode ficar vazio."]
     },
-    hash: { type: String },
-    salt: { type: String },
+    hash: { type: String, select: false },
+    salt: { type: String , select: false},
     recovery: {
         type: {
             token: String,
             date: Date
         },
-        default: {}
+        default: {},
+        select: false
     }, 
     status:{
         type: String,
@@ -112,6 +113,7 @@ UsuarioSchema.methods.getUserId = function(){
         dataNascimento: this.dataNascimento,
         role: this.permissao,
         funcao: this.funcao,
+        status: this.status,
         telefones: this.telefones,
         endereco: this.endereco,
         genero: this.genero,
