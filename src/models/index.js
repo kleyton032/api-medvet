@@ -1,6 +1,6 @@
 require('./Usuario')
-require('./Pet')
-require('./Tutor')
+require('./pet')
+require('./tutor')
 require('./Funcionario')
 require('./Especialidades')
 require('./Veterinario')

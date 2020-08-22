@@ -63,8 +63,8 @@ const UsuarioSchema = new mongoose.Schema({
         type: String,
         required: [true,"não pode ficar vazio."]
     },
-    hash: { type: String, select: false },
-    salt: { type: String , select: false},
+    hash: { type: String},
+    salt: { type: String},
     recovery: {
         type: {
             token: String,
@@ -83,11 +83,11 @@ UsuarioSchema.plugin(uniqueValidator, { message: "{PATH} Já está sendo utiliza
 
 UsuarioSchema.methods.setSenha = function (password) {
     this.salt = crypto.randomBytes(16).toString("hex");
-    this.hash = crypto.pbkdf2Sync(password, this.salt, 1000, 100, "sha512").toString("hex");
+    this.hash = crypto.pbkdf2Sync(password, this.salt, 100000, 64, "sha512").toString("hex");
 }
 
 UsuarioSchema.methods.validarSenha = function (password) {
-    const hash = crypto.pbkdf2Sync(password, this.salt, 1000, 100, "sha512").toString("hex");
+    const hash = crypto.pbkdf2Sync(password, this.salt, 100000, 64, "sha512").toString("hex");
     return hash === this.hash
 }
 

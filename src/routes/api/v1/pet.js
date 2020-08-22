@@ -1,7 +1,7 @@
 const router =  require('express').Router()
 //const auth = require('../../auth')
 
-const PetController = require('../../../controller/PetController')
+const PetController = require('../../../controller/petController')
 
 const petController = new PetController();
 

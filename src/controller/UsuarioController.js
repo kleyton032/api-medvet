@@ -10,7 +10,7 @@ class UsuarioController {
 
             if (!nome || !email || !password || !cpf || !telefones || !endereco || !dataNascimento || !funcao || !permissao || !unidade || !genero) return res.status(422).json({ error: "Preencha todos os campos para o cadastro." })
 
-            const usuario = new Usuario({ nome, email, password, cpf, telefones, endereco, dataNascimento, funcao, crmv, ufcrmv, permissao, unidade, genero })
+            const usuario = new Usuario({ nome, email, cpf, telefones, endereco, dataNascimento, funcao, crmv, ufcrmv, permissao, unidade, genero })
             usuario.setSenha(password)
 
             await usuario.save();
@@ -18,8 +18,6 @@ class UsuarioController {
         } catch (error) {
             next(error);
         }
-
-
     }
 
     //autenticar usuário
@@ -33,7 +31,7 @@ class UsuarioController {
             return res.status(422).json({ error: "A senha não pode ser vazia" })
         }
 
-        Usuario.findOne({ email }).populate({ path: "veterinario" }).populate({ path: "funcionario" }).then((usuario) => {
+        Usuario.findOne({ email }).then((usuario) => {
             if (!usuario) {
                 return res.status(401).json({ error: "Usuário não registrado" })
             }
@@ -55,16 +53,19 @@ class UsuarioController {
 
     }
 
-    //retonar unico usuário
-    async getIdUser(req, res, next) {
-        const { id: _id } = req.params;
+    //retonar usuário autenticado
+   async getUser(req, res, next) {
         try {
-            const user = await Usuario.findById(_id)
-            res.send({ user: user.getUserId() })
+            const user = await Usuario.findById(req.payload.id)
+            if (!user) {
+                return res.status(401).json({ error: "Usuário não registrado" })
+            }
+            res.json({ user: user.enviarAuthJson() })
 
         } catch (error) {
             next(error)
         }
+        
     }
 
     //alterar usuário

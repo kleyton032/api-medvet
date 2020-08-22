@@ -1,7 +1,7 @@
 const router =  require('express').Router()
 //const auth = require('../../auth')
 
-const TutorController = require('../../../controller/TutorController')
+const TutorController = require('../../../controller/tutorController')
 
 const tutorController = new TutorController();
 
