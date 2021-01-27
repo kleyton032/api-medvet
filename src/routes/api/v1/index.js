@@ -1,5 +1,6 @@
 const router = require('express').Router()
 
+router.use('/authentication', require('./session'))
 router.use('/pets', require('./pet'))
 router.use('/tutor', require('./tutor'))
 router.use('/funcionario', require('./funcionario'))
@@ -8,6 +9,7 @@ router.use('/especialidade', require('./especialidade'))
 router.use('/veterinario', require('./veterinario'))
 router.use('/servico', require('./servicos'))
 router.use('/unidade', require('./unidade'))
+
 
 
 
